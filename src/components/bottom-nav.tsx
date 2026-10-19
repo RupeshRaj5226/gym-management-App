@@ -8,75 +8,35 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  {
-    label: 'Home',
-    icon: '⌂',
-    route: '/dashboard',
-  },
-  {
-    label: 'Members',
-    icon: '👥',
-    route: '/members',
-  },
-  {
-    label: 'Plans',
-    icon: '▣',
-    route: '/memberships',
-  },
-  {
-    label: 'Reports',
-    icon: '▥',
-    route: '/reports',
-  },
-  {
-    label: 'Settings',
-    icon: '⚙',
-    route: '/settings',
-  },
+  { label: 'Home', icon: '⌂', route: '/dashboard' },
+  { label: 'Members', icon: '♟', route: '/members' },
+  { label: 'Plans', icon: '▣', route: '/memberships' },
+  { label: 'Reports', icon: '▥', route: '/reports' },
+  { label: 'Settings', icon: '⚙', route: '/settings' },
 ];
 
 export default function BottomNav() {
   const pathname = usePathname();
 
-  const handleNavigation = (route: NavItem['route']) => {
-    router.push(route);
-  };
-
   return (
     <View style={styles.container}>
       {navItems.map((item) => {
-        const active = pathname === item.route;
+        const active = pathname === item.route || (item.route === '/dashboard' && pathname === '/');
 
         return (
           <Pressable
             key={item.route}
+            accessibilityRole="button"
+            accessibilityState={{ selected: active }}
+            accessibilityLabel={item.label}
             style={styles.item}
-            onPress={() => handleNavigation(item.route)}
+            onPress={() => router.push(item.route)}
           >
-            <View
-              style={[
-                styles.iconContainer,
-                active && styles.activeIconContainer,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.icon,
-                  active && styles.activeIcon,
-                ]}
-              >
-                {item.icon}
-              </Text>
+            <View style={[styles.iconContainer, active && styles.activeIconContainer]}>
+              <Text style={[styles.icon, active && styles.activeIcon]}>{item.icon}</Text>
             </View>
-
-            <Text
-              style={[
-                styles.label,
-                active && styles.activeLabel,
-              ]}
-            >
-              {item.label}
-            </Text>
+            <Text style={[styles.label, active && styles.activeLabel]}>{item.label}</Text>
+            {active && <View style={styles.activeIndicator} />}
           </Pressable>
         );
       })}
@@ -86,52 +46,23 @@ export default function BottomNav() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 76,
-    backgroundColor: '#FFFFFF',
+    minHeight: 76,
+    backgroundColor: '#0D131D',
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: '#202C3B',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
+    paddingTop: 7,
     paddingBottom: 8,
   },
-
-  item: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  iconContainer: {
-    width: 42,
-    height: 30,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  activeIconContainer: {
-    backgroundColor: '#DBEAFE',
-  },
-
-  icon: {
-    fontSize: 19,
-    color: '#64748B',
-  },
-
-  activeIcon: {
-    color: '#2563EB',
-  },
-
-  label: {
-    marginTop: 3,
-    fontSize: 10,
-    fontWeight: '600',
-    color: '#64748B',
-  },
-
-  activeLabel: {
-    color: '#2563EB',
-  },
+  item: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 56 },
+  iconContainer: { width: 42, height: 30, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
+  activeIconContainer: { backgroundColor: '#392719', borderWidth: 1, borderColor: '#664128' },
+  icon: { fontSize: 18, color: '#77869B' },
+  activeIcon: { color: '#FF9146' },
+  label: { marginTop: 4, fontSize: 9, fontWeight: '700', color: '#758297' },
+  activeLabel: { color: '#FF9146' },
+  activeIndicator: { position: 'absolute', bottom: -2, width: 16, height: 2, borderRadius: 2, backgroundColor: '#FF812E' },
 });
